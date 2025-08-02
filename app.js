@@ -60,8 +60,6 @@ async function runBoot(){
 }
 
 let audioCtx;
-let audioUnlockArmed = false;
-let pendingBootChime = false;
 
 function createAudioContextOnDemand(){
   if (!audioCtx) {
@@ -69,52 +67,23 @@ function createAudioContextOnDemand(){
   }
   return audioCtx;
 }
-async function resumeAudioContext() {
+
+async function bootChime(){
   try{
     const ctx = createAudioContextOnDemand();
+    // Try to start immediately. Some browsers may still suspend; if so, just skip playback.
     if (ctx.state === 'suspended') {
-      await ctx.resume();
+      try { await ctx.resume(); } catch(e) {}
     }
-    return ctx.state === 'running';
-  }catch(e){
-    return false;
-  }
-}
-function armAudioUnlockOnce(){
-  if (audioUnlockArmed) return;
-  audioUnlockArmed = true;
-  const unlock = async ()=>{
-    const ok = await resumeAudioContext();
-    if (ok && pendingBootChime) {
-      pendingBootChime = false;
-      setTimeout(()=>bootChime(true), 0);
+    if (ctx.state !== 'running') {
+      return; // Do not wait for user input; simply no sound if autoplay blocked.
     }
-    document.removeEventListener('pointerdown', unlock, true);
-    document.removeEventListener('keydown', unlock, true);
-    startBtn && startBtn.removeEventListener('click', unlock, true);
-    terminalApp && terminalApp.removeEventListener('click', unlock, true);
-    audioUnlockArmed = false;
-  };
-  document.addEventListener('pointerdown', unlock, true);
-  document.addEventListener('keydown', unlock, true);
-  startBtn && startBtn.addEventListener('click', unlock, true);
-  terminalApp && terminalApp.addEventListener('click', unlock, true);
-}
-function bootChime(fromGesture=false){
-  try{
-    if (!fromGesture) {
-      pendingBootChime = true;
-      armAudioUnlockOnce();
-      return;
-    }
-    resumeAudioContext().then((ok)=>{
-      if(!ok){ pendingBootChime = true; armAudioUnlockOnce(); return; }
-      const ctx = audioCtx;
-      const now = ctx.currentTime;
 
-      const master = ctx.createGain();
-      master.gain.setValueAtTime(0.6, now);
-      master.connect(ctx.destination);
+    const now = ctx.currentTime;
+
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0.3, now); // half volume from ~0.6 -> ~0.3
+    master.connect(ctx.destination);
 
       const tone = ctx.createBiquadFilter();
       tone.type = 'bandpass';
@@ -389,7 +358,6 @@ function bootChime(fromGesture=false){
       src.stop(t0 + dur);
       src2.stop(t0 + dur);
     })();
-    });
 
   }catch(e){}
 }
@@ -420,7 +388,8 @@ async function startUILoad(){
     if(p >= 100){
       clearInterval(timer);
       tx.textContent = "Ready";
-      bootChime(false);
+      // Play immediately at boot time; do not wait for user gesture. If autoplay is blocked, it will silently skip.
+      bootChime();
       setTimeout(()=>{
         uiLoading.style.display = 'none';
         desktop.style.display = 'block';
