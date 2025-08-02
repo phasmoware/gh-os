@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GH-OS icon">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="50%" stop-color="#ff4d8d"/>
+      <stop offset="100%" stop-color="#9cff6b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square base -->
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="#0b0f14"/>
+  <rect x="36" y="36" width="440" height="440" rx="92" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+
+  <!-- Terminal chevron and underscore -->
+  <g transform="translate(92,120)">
+    <path d="M40 96 L144 152 L40 208" fill="none" stroke="url(#g1)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M184 208 H320" fill="none" stroke="#ff4d8d" stroke-width="32" stroke-linecap="round"/>
+  </g>
+</svg>
