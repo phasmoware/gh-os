@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GH-OS Demo</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="boot">
+  <div class="boot-title">GH-OS kernel 7.2.1 (arch x86_64) — Secure Boot: enabled</div>
+  <div class="boot-stream" id="bootStream" aria-live="polite"></div>
+  <div class="boot-footer">Tip: Press nothing. The system is calibrating display phosphors…</div>
+</div>
+
+<div id="ui-loading">
+  <div class="loading-card">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true"></div>
+      <div>
+        <h1>GH-OS UI Subsystem</h1>
+        <div class="sub">Initializing telemetry overlays, containment compositor and audio stack…</div>
+      </div>
+    </div>
+    <div class="progress"><i id="progressBar"></i></div>
+    <div class="tips">
+      <span><strong class="c-accent">GH-OS UI</strong> palette engaged • <span class="c-accent2">Retrofuturism</span> profile</span>
+      <span class="dot"></span>
+    </div>
+  </div>
+</div>
+
+<div id="desktop" role="application" aria-label="GH-OS Desktop">
+  <!-- Animated server rack light-matrix face wallpaper -->
+  <div id="faceWallpaper" aria-hidden="true">
+    <canvas id="rackFace" width="900" height="600"></canvas>
+  </div>
+  <div class="taskbar">
+    <div class="start" id="startBtn" aria-haspopup="menu" aria-expanded="false" title="Open Start">
+      <div class="gem"></div>
+      <div>Start</div>
+    </div>
+    <div class="dock">
+      <div class="app" id="terminalApp" title="Terminal" aria-label="Open Terminal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 7l4 4-4 4" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 16h8" stroke="#ff4d8d" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="clock" id="clock">
+      <span class="dot"></span>
+      <span id="clockText">--:--:--</span>
+    </div>
+  </div>
+
+  <div class="menu" id="startMenu" role="menu" aria-label="Start Menu">
+    <h3>Applications</h3>
+    <button class="entry" id="menuTerminal" role="menuitem"><div class="ic"></div> Terminal</button>
+    <h3>System</h3>
+    <button class="entry" id="menuAbout" role="menuitem"><div class="ic ic-about"></div> About GH-OS</button>
+  </div>
+
+  <div class="window window-opaque" id="terminalWin" aria-label="Terminal Window">
+    <div class="titlebar" id="termDrag">
+      <div class="dots"><div class="dotR" id="closeTerm" role="button" aria-label="Close Terminal"></div><div class="dotY"></div><div class="dotG"></div></div>
+      <div class="title">Terminal — GH-OS</div>
+    </div>
+    <div class="term" id="terminal" tabindex="0" role="log" aria-live="polite"></div>
+    <div class="resize" id="termResize" aria-hidden="true"></div>
+  </div>
+</div>
+
+<div class="scanline"></div>
+<div class="vignette"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

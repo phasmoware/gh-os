@@ -1,0 +1,419 @@
+:root{
+  --bg: #0b0f14;
+  --bg-deep: #070a0f;
+  --glass: rgba(10,16,24,0.55);
+  --glass-strong: rgba(12,18,28,0.75);
+  --accent: #00e5ff;
+  --accent2: #ff4d8d;
+  --accent3: #9cff6b;
+  --gold: #ffd166;
+  --warn: #ffb84d;
+  --error: #ff5e5e;
+  --grid: rgba(0,229,255,0.06);
+  --crt-glow: rgba(0,229,255,0.08);
+  --text: #cfe6ef;
+  --text-dim: #9db3bd;
+  --shadow: 0 30px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+  --blur: 14px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+/* Base */
+html,body{
+  height:100%;
+  margin:0;
+  background: radial-gradient(1200px 800px at 50% 120%, #0b1118 0%, #05070a 60%, #030407 100%);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  letter-spacing: 0.2px;
+  overflow:hidden;
+}
+
+/* CRT overlays */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background:
+    radial-gradient(1600px 1200px at 50% -20%, rgba(0,229,255,0.07), transparent 60%),
+    radial-gradient(900px 600px at 10% 110%, rgba(255,77,141,0.05), transparent 60%),
+    radial-gradient(900px 600px at 90% 120%, rgba(156,255,107,0.06), transparent 60%);
+  pointer-events:none;
+  mix-blend-mode: screen;
+}
+body::after{
+  content:"";
+  position:fixed; inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.04), rgba(0,0,0,0.08)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.032), rgba(255,255,255,0.032) 1px, transparent 2px, transparent 3px);
+  opacity:0.35;
+  pointer-events:none;
+}
+.scanline{
+  position:fixed; inset:0; pointer-events:none;
+  width:100vw; height:100vh;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,229,255,0.05) 50%, transparent 100%);
+  mix-blend-mode: screen;
+  animation: scan 7s linear infinite;
+  opacity:0.12;
+  z-index: 9998;
+}
+@keyframes scan{
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+.vignette{
+  position:fixed; inset:0; pointer-events:none;
+  width:100vw; height:100vh;
+  box-shadow: inset 0 0 140px rgba(0,0,0,0.65), inset 0 0 400px rgba(0,0,0,0.35);
+  z-index: 9999;
+}
+
+/* Boot */
+#boot{
+  position:fixed; inset:0; padding:28px;
+  color: #bfe8ff;
+  background: linear-gradient(180deg, #03070a 0%, #050a10 100%);
+  font-size: 14px;
+  line-height: 1.45;
+  overflow:hidden;
+  display:flex; flex-direction:column;
+  gap:8px;
+}
+.boot-stream{
+  flex:1; overflow:auto; padding-right:12px;
+  scrollbar-width: thin;
+}
+.boot-line{ white-space: pre-wrap; color: #bfe8ff; }
+.boot-line .ok{ color: var(--accent3); }
+.boot-line .warn{ color: var(--warn); }
+.boot-line .err{ color: var(--error); }
+.boot-title{
+  color: var(--accent);
+  text-shadow: 0 0 8px rgba(0,229,255,0.55);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.boot-footer{
+  opacity:0.65; color: var(--text-dim);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 8px;
+}
+
+/* UI Loading */
+#ui-loading{
+  position:fixed; inset:0;
+  display:none; place-items:center;
+  background:
+    radial-gradient(1100px 900px at 50% 120%, #071018 0%, #05080e 60%, #030407 100%),
+    repeating-linear-gradient(135deg, rgba(0,229,255,0.04) 0 2px, transparent 2px 6px);
+}
+.loading-card{
+  width:min(540px, 90vw);
+  padding:28px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(15,23,34,0.75), rgba(10,16,24,0.55));
+  box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 40px rgba(0,229,255,0.06);
+  backdrop-filter: blur(var(--blur)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.2);
+}
+.brand{ display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+.brand-logo{
+  width:42px; height:42px; border-radius:12px;
+  background:
+    conic-gradient(from 210deg, rgba(0,229,255,0.75), rgba(255,77,141,0.75), rgba(156,255,107,0.75), rgba(0,229,255,0.75));
+  filter: blur(0.2px);
+  box-shadow: inset 0 0 12px rgba(255,255,255,0.2), 0 0 24px rgba(0,229,255,0.35);
+  position:relative;
+}
+.brand-logo::after{
+  content:""; position:absolute; inset:4px; border-radius:10px;
+  background: radial-gradient(120px 60px at 30% 30%, rgba(255,255,255,0.25), transparent 42%),
+              radial-gradient(120px 60px at 70% 70%, rgba(255,255,255,0.1), transparent 40%),
+              linear-gradient(180deg, rgba(0,0,0,0.25), rgba(255,255,255,0.06));
+}
+.brand h1{ font-size:18px; margin:0; letter-spacing:1.2px; color:#e7faff; }
+.sub{ color: var(--text-dim); font-size:13px; margin-bottom:18px; }
+.c-accent{ color: var(--accent); }
+.c-accent2{ color: var(--accent2); }
+.progress{
+  width:100%; height:10px; border-radius:999px;
+  background: rgba(255,255,255,0.06);
+  overflow:hidden; position:relative;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+.progress > i{
+  display:block; height:100%; width:0%;
+  background: linear-gradient(90deg, rgba(0,229,255,0.1), rgba(0,229,255,0.8), rgba(255,77,141,0.8));
+  box-shadow: 0 0 20px rgba(0,229,255,0.7);
+  border-radius:999px;
+  transition: width 260ms ease;
+}
+.tips{
+  margin-top:14px; font-size:12px; color: var(--text-dim);
+  display:flex; align-items:center; gap:10px; justify-content:space-between;
+}
+.tips .dot{
+  width:8px; height:8px; border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{ transform: scale(0.85); opacity:0.7;}
+  50%{ transform: scale(1.15); opacity:1;}
+}
+
+/* Desktop */
+#desktop{
+  position:fixed; inset:0; display:none;
+  background:
+    radial-gradient(1600px 1200px at 50% 120%, rgba(0,229,255,0.08), transparent 60%),
+    radial-gradient(1200px 900px at 0% 0%, rgba(255,77,141,0.05), transparent 50%),
+    radial-gradient(1200px 900px at 100% 0%, rgba(156,255,107,0.05), transparent 50%),
+    linear-gradient(180deg, #060a10, #05080e 40%, #04070b 100%);
+  overflow:hidden;
+}
+
+/* Animated Maniac-like face wallpaper */
+#faceWallpaper{
+  position:absolute; inset:0;
+  pointer-events:none;
+  opacity:0.5;
+  animation: faceFloat 14s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+#faceWallpaper svg{
+  width:100%; height:100%;
+  display:block;
+  filter: drop-shadow(0 10px 40px rgba(0,229,255,0.06));
+}
+/* Ensure the canvas scales with the container in CSS pixels */
+#rackFace{
+  width:100%;
+  height:100%;
+  display:block;
+}
+@keyframes faceFloat{
+  0% { transform: translateY(0px) scale(1); }
+  100% { transform: translateY(-6px) scale(1.01); }
+}
+
+/* Taskbar */
+.taskbar{
+  position:absolute; left:10px; right:10px; bottom:10px;
+  height:48px; border-radius: 14px;
+  background: linear-gradient(180deg, rgba(12,18,28,0.75), rgba(8,12,18,0.6));
+  backdrop-filter: blur(var(--blur)) saturate(1.3);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.3);
+  box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.06);
+  display:flex; align-items:center; gap:10px; padding:6px 8px;
+}
+.start{
+  height:36px; min-width:44px; display:flex; align-items:center; gap:10px;
+  padding:0 12px; border-radius:12px;
+  background: linear-gradient(180deg, rgba(0,229,255,0.16), rgba(0,229,255,0.05));
+  color:#e8fbff; border:1px solid rgba(0,229,255,0.3);
+  text-shadow: 0 0 8px rgba(0,229,255,0.4);
+  box-shadow: 0 6px 18px rgba(0,229,255,0.22), inset 0 0 8px rgba(0,229,255,0.12);
+  cursor:pointer; user-select:none;
+  transition: transform 120ms ease, background 120ms ease;
+}
+.start:active{ transform: translateY(1px); }
+.start .gem{
+  width:18px; height:18px; border-radius:6px;
+  background: conic-gradient(from 200deg, #00e5ff, #ff4d8d, #9cff6b, #00e5ff);
+  box-shadow: 0 0 10px rgba(0,229,255,0.6), inset 0 0 10px rgba(255,255,255,0.35);
+}
+.dock{ display:flex; align-items:center; gap:8px; flex:1; padding:0 8px; }
+.dock .app{
+  height:36px; min-width:36px; border-radius:10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.08);
+  display:flex; align-items:center; justify-content:center;
+  color: var(--accent);
+  cursor:pointer; transition: transform 120ms ease, box-shadow 120ms ease;
+  box-shadow: inset 0 0 0 1px rgba(0,229,255,0.15), 0 6px 14px rgba(0,0,0,0.35);
+}
+.dock .app:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,229,255,0.18);
+}
+.clock{
+  margin-left:auto; padding:0 12px;
+  height:36px; min-width:120px; border-radius:10px;
+  display:flex; align-items:center; justify-content:flex-end; gap:10px;
+  color:#e6f7ff; border:1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  text-shadow: 0 0 6px rgba(0,229,255,0.4);
+}
+.clock .dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+
+/* Start Menu */
+.menu{
+  position:absolute; left:10px; bottom:64px; width:320px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(12,18,28,0.85), rgba(10,16,24,0.7));
+  backdrop-filter: blur(var(--blur)) saturate(1.3);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.3);
+  box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.06);
+  padding:12px; display:none;
+}
+.menu h3{
+  margin:6px 8px 10px; font-size:13px; color:#cfe6ef; opacity:0.9;
+  letter-spacing:1px;
+}
+.entry{
+  display:flex; align-items:center; gap:10px;
+  padding:10px; border-radius:10px; cursor:pointer;
+  border:1px solid transparent; color:#dff7ff;
+  background:none;
+}
+.entry:hover{
+  background: linear-gradient(180deg, rgba(0,229,255,0.12), rgba(0,229,255,0.05));
+  border-color: rgba(0,229,255,0.25);
+  box-shadow: inset 0 0 0 1px rgba(0,229,255,0.2);
+}
+.ic{
+  width:24px; height:24px; border-radius:8px;
+  background: radial-gradient(16px 10px at 30% 30%, rgba(255,255,255,0.3), transparent), linear-gradient(180deg, #00e5ff, #007a86);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 0 12px rgba(0,229,255,0.3);
+}
+.ic-about{
+  background: linear-gradient(180deg,#ff4d8d,#7a0034);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.2), 0 0 12px rgba(255,77,141,0.3);
+}
+
+/* Window (Terminal) */
+.window{
+  position:absolute; top:8%; left:8%;
+  width:min(900px, 80vw); height:min(520px, 70vh);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(10,16,24,0.85), rgba(7,12,19,0.7));
+  box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  display:none;
+  overflow:hidden;
+}
+/* Slightly increased opacity transparency for terminal */
+.window-opaque{
+  background: linear-gradient(180deg, rgba(10,16,24,0.78), rgba(7,12,19,0.62));
+}
+.titlebar{
+  height:40px; display:flex; align-items:center; gap:10px;
+  padding:0 10px; border-bottom:1px solid rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  cursor:grab; user-select:none;
+}
+.titlebar:active{ cursor:grabbing; }
+.dots{ display:flex; gap:8px; margin-right:6px; }
+.dotR,.dotY,.dotG{
+  width:10px; height:10px; border-radius:50%; box-shadow: inset 0 0 8px rgba(255,255,255,0.3);
+}
+.dotR{ background:#ff6b6b; }
+.dotY{ background:#ffcd6b; }
+.dotG{ background:#7dff9e; }
+.title{
+  font-size:12px; color:#dbf6ff; text-shadow: 0 0 6px rgba(0,229,255,0.4);
+}
+.term{
+  position:absolute; inset:40px 0 0 0; padding:12px 14px 16px 14px;
+  overflow:auto; font-size:13px; line-height:1.55;
+  color:#d9f6ff; text-shadow: 0 0 8px rgba(0,229,255,0.2);
+}
+.term .line{ white-space: pre-wrap; }
+.prompt{
+  display:flex; gap:8px; align-items:center; margin-top:2px;
+}
+.prompt .ps1{ color:#9cff6b; }
+.prompt .ps1 .user{ color:#00e5ff; }
+.prompt .ps1 .path{ color:#ffd166; }
+.prompt input{
+  background: transparent; border: none; outline: none; color:#eaffff;
+  font: inherit; flex:1; caret-color: var(--accent);
+  text-shadow: inherit;
+}
+.term .help{ color:#cfe6ef; }
+.term .ok{ color: var(--accent3); }
+.term .err{ color: var(--error); }
+.resize{
+  position:absolute; right:0; bottom:0; width:16px; height:16px; cursor: nwse-resize;
+  background:
+    linear-gradient(135deg, transparent 50%, rgba(255,255,255,0.2) 50%),
+    linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 40%);
+  opacity:0.6;
+}
+
+/* Desktop grid overlay */
+#desktop::after{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,0.02), rgba(255,255,255,0.02)),
+    repeating-linear-gradient(90deg, var(--grid) 0 1px, transparent 1px 48px),
+    repeating-linear-gradient(0deg, var(--grid) 0 1px, transparent 1px 48px);
+  mix-blend-mode: soft-light;
+}
+
+/* Selection */
+::selection{
+  background: rgba(0,229,255,0.35);
+  color:#001014;
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 768px){
+  /* Stack face on top half, terminal on bottom above taskbar */
+  #faceWallpaper{
+    position:absolute;
+    top:0; left:0; right:0;
+    height: calc(50% - 34px); /* leave room for terminal titlebar and spacing */
+    pointer-events:none;
+  }
+  #rackFace{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+
+  .window{
+    left: 6px !important;
+    right: 6px !important;
+    width: auto !important;
+    /* Place at bottom above taskbar (taskbar is 48px + 10px gap) */
+    bottom: calc(48px + 16px) !important;
+    top: auto !important;
+    height: calc(50% - 24px) !important; /* compact to fit with face visible */
+    border-radius: 12px;
+  }
+  .titlebar{
+    height: 36px;
+  }
+  .term{
+    inset: 36px 0 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    padding:10px 12px 14px 12px;
+  }
+  .prompt input{
+    font-size: 12px;
+  }
+
+  /* Make taskbar always visible and pinned to bottom as designed */
+  .taskbar{
+    left:6px; right:6px; bottom:6px;
+    height:48px;
+  }
+
+  /* Start menu should open above the taskbar and not exceed half height */
+  .menu{
+    left:6px; bottom: calc(48px + 12px);
+    width: min(92vw, 340px);
+    max-height: 46vh;
+    overflow:auto;
+  }
+}
